@@ -2,7 +2,7 @@
 
 This [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) server lets you use Claude Desktop to interact with your task management data in [Things app](https://culturedcode.com/things). You can ask Claude to create tasks, analyze projects, help manage priorities, and more.
 
-This server leverages the [Things.py](https://github.com/thingsapi/things.py) library and the [Things URL Scheme](https://culturedcode.com/things/help/url-scheme/). 
+This server leverages the [Things.py](https://github.com/thingsapi/things.py) library and the [Things URL Scheme](https://culturedcode.com/things/help/url-scheme/).
 
 <a href="https://glama.ai/mcp/servers/t9cgixg2ah"><img width="380" height="200" src="https://glama.ai/mcp/servers/t9cgixg2ah/badge" alt="Things Server MCP server" /></a>
 
@@ -18,7 +18,7 @@ This server leverages the [Things.py](https://github.com/thingsapi/things.py) li
 
 ## Installation (for Claude Desktop)
 
-1. Prerequisites 
+1. Prerequisites
 * Python 3.12+
 * Claude Desktop
 * Things 3 ("Enable Things URLs" must be turned on in Settings -> General)
@@ -34,31 +34,38 @@ Restart your terminal afterwards.
 uv tool install git+https://github.com/askedrelic/things-mcp
 ```
 
-4. Edit the Claude Desktop configuration file:
-```bash
-code ~/Library/Application\ Support/Claude/claude_desktop_config.json
-```
+4. Add the Things server, to run via uvx (uv tool wrapper), to the Claude
+   Desktop configuration file. This is a convenience function using jq you can copy/paste.
 
-Add the Things server, to run via uvx (uv tool wrapper).
-```json
-{
-    "mcpServers": {
-        "things": {
-            "command": "uvx",
-            "args": ["things-mcp"]
-        }
-    }
+```bash
+claude_config_update() {
+   local server_name="$1"
+   local server_config="$2"
+   local config_file="$HOME/Library/Application Support/Claude/claude_desktop_config.json"
+
+   [[ ! -f "$config_file" ]] && echo '{"mcpServers": {}}' > "$config_file"
+
+   jq --arg name "$server_name" --argjson config "$server_config" \
+      '.mcpServers = (.mcpServers // {}) | .mcpServers[$name] = $config' \
+      "$config_file" > /tmp/claude_config.$$ && \
+   mv /tmp/claude_config.$$ "$config_file"
+
+   jq '.mcpServers' "$config_file"
 }
+
+claude_config_update things '{ "command": "uvx", "args": ["things-mcp"] }'
 ```
 Restart the Claude Desktop app.
 
 ### Sample Usage with Claude Desktop
+
 * "What's on my todo list today?"
 * "Create a todo to pack for my beach vacation next week, include a packling checklist."
 * "Evaluate my current todos using the Eisenhower matrix."
 * "Help me conduct a GTD-style weekly review using Things."
 
 #### Tips
+
 * Create a project in Claude with custom instructions that explains how you use Things and organize areas, projects, tags, etc. Tell Claude what information you want included when it creates a new task (eg asking it to include relevant details in the task description might be helpful).
 * Try adding another MCP server that gives Claude access to your calendar. This will let you ask Claude to block time on your calendar for specific tasks, create todos from upcoming calendar events (eg prep for a meeting), etc.
 
