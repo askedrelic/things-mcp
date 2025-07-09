@@ -27,9 +27,9 @@ This server leverages the [Things.py](https://github.com/thingsapi/things.py) li
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-Resart your terminal afterwards.
+Restart your terminal afterwards.
 
-3. Install via uv tool:
+3. Install this repo via uv tool:
 ```bash
 uv tool install git+https://github.com/askedrelic/things-mcp
 ```
@@ -38,12 +38,14 @@ uv tool install git+https://github.com/askedrelic/things-mcp
 ```bash
 code ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ```
-Add the Things server to the mcpServers key to the configuration file, update your username to where uv tool installed the things-mcp tool.
+
+Add the Things server, to run via uvx (uv tool wrapper).
 ```json
 {
     "mcpServers": {
         "things": {
-            "command": "/Users/<username>/.local/bin/things-mcp",
+            "command": "uvx",
+            "args": ["things-mcp"]
         }
     }
 }
