@@ -29,32 +29,21 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 Resart your terminal afterwards.
 
-3. Clone this repository:
+3. Install via uv tool:
 ```bash
-git clone https://github.com/hald/things-mcp
+uv tool install git+https://github.com/askedrelic/things-mcp
 ```
-4. Install the required Python packages:
-```bash
-cd things-mcp
-uv venv
-uv pip install -r pyproject.toml
-```
-5. Edit the Claude Desktop configuration file:
+
+4. Edit the Claude Desktop configuration file:
 ```bash
 code ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ```
-Add the Things server to the mcpServers key to the configuration file (be sure to update the path to the folder where you installed these files):
+Add the Things server to the mcpServers key to the configuration file, update your username to where uv tool installed the things-mcp tool.
 ```json
 {
     "mcpServers": {
         "things": {
-            "command": "uv",
-            "args": [
-                "--directory",
-                "/ABSOLUTE/PATH/TO/PARENT/FOLDER/things-mcp",
-                "run",
-                "things_server.py"
-            ]
+            "command": "/Users/<username>/.local/bin/things-mcp",
         }
     }
 }
