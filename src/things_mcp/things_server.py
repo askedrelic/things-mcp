@@ -6,8 +6,8 @@ import mcp.types as types
 from mcp.server import NotificationOptions, Server
 import mcp.server.stdio
 
-from tools import get_tools_list
-from handlers import handle_tool_call
+from .tools import get_tools_list
+from .handlers import handle_tool_call
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)

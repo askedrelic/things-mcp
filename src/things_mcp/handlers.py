@@ -2,8 +2,8 @@ import logging
 from typing import List
 import things
 import mcp.types as types
-from formatters import format_todo, format_project, format_area, format_tag
-import url_scheme
+from .formatters import format_todo, format_project, format_area, format_tag
+from . import url_scheme
 
 logger = logging.getLogger(__name__)
 
